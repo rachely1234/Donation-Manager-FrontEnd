@@ -1,0 +1,38 @@
+.inputContainer {
+    position: relative;
+    margin: 20px 0;
+}
+input {
+    
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 3px solid #030303;
+    -webkit-transition: 0.5s;
+    transition: 0.5s;
+    outline: none;
+    border-radius:10px;
+    color: rgb(0, 0, 0);
+  }
+  
+  input:focus {
+    border: 3px solid #1d0ba9; 
+    border-radius: 4px;
+
+
+  }
+
+  .asterisk_input::after {
+    content:" *"; 
+    color: #e32;
+    position: absolute; 
+    font-size: large; 
+    padding: 0 5px 0 0; }
+.lable_location{
+    position: absolute;
+    left: 80px;
+    background-color: white;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+    
