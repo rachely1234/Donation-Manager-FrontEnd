@@ -1,0 +1,29 @@
+:root{
+    
+    --blue : rgb(11, 49, 218);
+    --white : rgb(255, 255, 255);
+}
+
+.button_template{
+
+    border-radius:20px;
+    padding: 10px 50px;
+    font-size: 16px;
+
+}
+
+.hasBackground {
+
+    background-color: var(--blue);
+    color:var(--white);
+    border: none;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+
+
+}
+
+.withoutBackground {
+    color: var(--blue);
+    border: solid 1px var(--blue);
+    background-color: var(--white);
+}
