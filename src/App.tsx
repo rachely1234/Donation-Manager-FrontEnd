@@ -6,7 +6,7 @@ import DonationForm from './components/DonationForm';
 
 function App() {
   return (
- <DonationForm/>
+    <DonationForm/>
   );
 }
 

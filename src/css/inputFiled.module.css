@@ -2,7 +2,7 @@
     position: relative;
     margin: 20px 0;
 }
-input {
+input ,select{
     
     padding: 12px 20px;
     margin: 8px 0;
@@ -13,11 +13,14 @@ input {
     outline: none;
     border-radius:10px;
     color: rgb(0, 0, 0);
+    width: 100%;
+   
   }
+
   
   input:focus {
     border: 3px solid #1d0ba9; 
-    border-radius: 4px;
+    border-radius: 10px;
   }
 
   .asterisk_input::after {
@@ -26,12 +29,18 @@ input {
     position: absolute; 
     font-size: large; 
     padding: 0 5px 0 0; 
+    
 }
 
 .lable_location{
     position: absolute;
-    left: 80px;
+    
     background-color: white;
     padding-left: 10px;
     padding-right: 10px;
+}
+
+.largeInput {
+  flex: 2; 
+  background-color: #e32;
 }

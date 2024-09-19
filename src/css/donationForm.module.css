@@ -1,0 +1,38 @@
+.continer {
+
+    display: flex;
+    justify-content: center;
+
+    align-items: center;
+    direction: rtl;
+
+    height: 100vh;
+}
+
+
+form {
+
+    width: 700px;
+
+    padding: 20px;
+
+    border: 1px solid #ccc;
+
+    box-shadow: 10px 10px 5px 12px rgba(0, 0, 0, 0.2);
+
+}
+
+.firstInputs {
+
+   
+    display: flex;
+    justify-content: space-between;
+}
+
+.lastInputs {
+    display: flex;
+    justify-content: flex-start;
+    
+
+}
+
