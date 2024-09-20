@@ -23,7 +23,7 @@ const Button: React.FC<InputFieldProps> = ({ typeButton, value,hasBackground,onC
 <>
     {hasBackground?
     <button onClick={onClick} className={ `${button.hasBackground } ${button.button_template}`}type={typeButton} >{value}</button>:
-    <button className={`${button.withoutBackground} ${button.button_template}`}type={typeButton}>{value}</button>
+    <button onClick={onClick} className={`${button.withoutBackground} ${button.button_template}`}type={typeButton}>{value}</button>
     }
 </>
 

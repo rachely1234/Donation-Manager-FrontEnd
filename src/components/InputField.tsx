@@ -25,14 +25,15 @@ const InputField: React.FC<InputFieldProps> = ({ label, type, value, isRequired,
                 {label}</label> :
                 <label className={inputFiled.lable_location}>{label}</label>}
 
-            {type == "select" && options ? <select className={inputFiled.asterisk_input } required={isRequired} value={value} onChange={onChange}>
+            {type == "select" && options ? <select className={`${inputFiled.asterisk_input} ${className}`} required={isRequired} value={value} onChange={onChange}>
                 {options.map((option) => (
                     <option key={option.value} value={option.value}>
                         {option.label}
                     </option>
                 ))}
-            </select> :
-                <input className={`${inputFiled.asterisk_input}${inputFiled.largeInput} `} required={isRequired} type={type} value={value} onChange={onChange} />}
+            </select>
+             :
+                <input className={`${className}`} required={isRequired} type={type} value={value} onChange={onChange} />}
 
 
         </div>

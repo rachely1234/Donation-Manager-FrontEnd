@@ -40,7 +40,14 @@ input ,select{
     padding-right: 10px;
 }
 
+
 .largeInput {
-  flex: 2; 
+  background-color: #1d0ba9;
+  flex-grow: 2;
+}
+
+.smallInput {
+  flex-grow: 1;
   background-color: #e32;
+  color: blueviolet;
 }

@@ -26,13 +26,21 @@ form {
 
    
     display: flex;
-    justify-content: space-between;
+   justify-content: space-between;
+   background-color: burlywood;
+   /* זה מה שצריך לעשות לכרטיסיה השלישית */
+   /* flex-direction: column; */
 }
 
 .lastInputs {
     display: flex;
     justify-content: flex-start;
+
+    /* זה מה שיצררכו לעשות עבור הכרטיסיה השלישית */
+    /* flex-direction: column; */
     
 
 }
+
+
 

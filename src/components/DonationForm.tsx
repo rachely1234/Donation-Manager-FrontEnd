@@ -3,8 +3,14 @@ import InputField from './InputField';
 import Button from './Button';
 
 import donationForm from '../css/donationForm.module.css'
-import inputField from '../css/inputFiled.module.css';
+
+
+import inputFiled from '../css/inputFiled.module.css';
 import { EnumType } from 'typescript';
+import { getAllItems, addItem } from '../apiRequest/genericRequest';
+import axios from 'axios';
+import { log } from 'console';
+
 
 interface FormValues {
   entityName: string;
@@ -18,7 +24,7 @@ interface FormValues {
 
 enum CurrencyType {
 
-  Null='',
+  Null = '',
   USD = 'USD',
   EUR = 'EUR',
   GBP = 'GBP',
@@ -44,21 +50,44 @@ const DonationForm: React.FC = () => {
   });
 
 
-  const handleSubmitbtn = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmitbtn = async (e: React.FormEvent) => {
+
+    try {
+
+      alert(formValues.entityName);
+      const validAmount = /^\d+(\.\d+)?$/;
+      if (validAmount.test(formValues.donationAmount) || formValues.donationAmount == '') {
+
+        const patams = await addItem(formValues,'donation');
+        alert(patams);
+      }
+      else {
+        alert("inside else")
+      }
+
+
+    }
+    catch {
+      alert("שדה חובה")
+    }
+
+
+
   };
 
-  const handleCleanBtn = (e: React.FormEvent) => {
+  const handleCleanBtn = async (e: React.FormEvent) => {
     alert("click");
+
+
     setFormValues(() => ({
       entityName: '',
-    donationAmount: '',
-    entityType: EntityType.Government,
-    donationTarget: '',
-    conditionForDonation: '',
-    currencyType: CurrencyType.Null,
-    conversionRate: ''
-      
+      donationAmount: '',
+      entityType: EntityType.Government,
+      donationTarget: '',
+      conditionForDonation: '',
+      currencyType: CurrencyType.Null,
+      conversionRate: ''
+
     }));
 
   };
@@ -112,20 +141,16 @@ const DonationForm: React.FC = () => {
 
   return (
     <div className={donationForm.continer}>
-      <form onSubmit={handleSubmitbtn}>
+      <form >
         <h2>הוספת דיווח על עמותה </h2>
         <div className={donationForm.firstInputs}>
-          <InputField isRequired={true} label="שם הישות המדינית הזרה" type="text" value={formValues.entityName} onChange={(e) => handleChangeEntytyName(e.target.value)} className={donationForm.smallInput} />
-          <InputField isRequired={true} label="סכום התרומה בש" type="text" value={formValues.donationAmount} className={donationForm.largeInput} onChange={(e) => handledonationAmount(e.target.value)} />
-          <InputField
-            isRequired={true}
-            label="סוג הישות המדינית הזרה"
-            type="select"
+          <InputField isRequired={true} label="שם הישות המדינית הזרה" type="text" value={formValues.entityName} className={inputFiled.smallInput} onChange={(e) => handleChangeEntytyName(e.target.value)} />
+          <InputField isRequired={true} label="סכום התרומה בש" type="text" value={formValues.donationAmount} className={inputFiled.smallInput} onChange={(e) => handledonationAmount(e.target.value)} />
+          <InputField isRequired={true} label="שם הישות המדינית הזרה" type="select"
             options={Object.values(EntityType).map((type) => ({ value: type, label: type }))}
-            value={formValues.entityType}
-            className={donationForm.largeInput}
-            onChange={(e) => handleInputChange('entityType', e.target.value)}
-          />
+
+            value={formValues.entityType} className={inputFiled.largeInput} onChange={(e) => handleInputChange('currencyType', e.target.value)} />
+
         </div>
         <InputField isRequired={true} label="ייעוד התרומה" type="text" value={formValues.donationTarget} className={donationForm.largeInput} onChange={(e) => handleInputChange('donationTarget', e.target.value)} />
         <InputField isRequired={false} label="התנאים לתרומה" type="text" value={formValues.conditionForDonation} className={donationForm.largeInput} onChange={(e) => handleInputChange('conditionForDonation', e.target.value)} />
@@ -133,7 +158,7 @@ const DonationForm: React.FC = () => {
           <InputField isRequired={true} label="סוג מטבע" type="select"
             options={Object.values(CurrencyType).map((type) => ({ value: type, label: type }))}
 
-            value={formValues.currencyType} className={donationForm.largeInput} onChange={(e) => handleInputChange('currencyType', e.target.value)} />
+            value={formValues.currencyType} className={inputFiled.largeInput} onChange={(e) => handleInputChange('currencyType', e.target.value)} />
           <InputField isRequired={true} label="שער המרה" type="text" value={formValues.conversionRate} className={donationForm.largeInput} onChange={(e) => handleInputChange('conversionRate', e.target.value)} />
         </div>
         <Button onClick={handleSubmitbtn} typeButton='submit' value='שמירה' hasBackground={false} />
