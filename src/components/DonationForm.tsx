@@ -1,15 +1,18 @@
-import React, { useState } from 'react';
-import InputField from './InputField';
-import Button from './Button';
-
-import donationForm from '../css/donationForm.module.css'
-
-
-import inputFiled from '../css/inputFiled.module.css';
-import { EnumType } from 'typescript';
-import { getAllItems, addItem } from '../apiRequest/genericRequest';
+import React, { useState,useEffect } from 'react';
+import { useDispatch ,useSelector} from 'react-redux';
 import axios from 'axios';
 import { log } from 'console';
+import { EnumType } from 'typescript';
+import InputField from './InputField';
+import Button from './Button';
+import donationForm from '../css/donationForm.module.css'
+import inputFiled from '../css/inputFiled.module.css';
+import { addItem } from '../apiRequest/genericRequest';
+
+import { addDonation} from '../redux/reducers/donationsReducer';
+// import { addDonation} from '../redux/reducers/donationsReducer';
+
+
 
 
 interface FormValues {
@@ -39,6 +42,17 @@ enum EntityType {
 
 const DonationForm: React.FC = () => {
 
+  const dispatch = useDispatch();
+  const donationDetails = useSelector((state: any) => state);
+ 
+
+  useEffect(() => {
+    console.log("donationDetails updated:", donationDetails);  
+  }, [donationDetails]);
+
+  //  const donationDetails = useSelector((state: any) => state.donations);
+
+
   const [formValues, setFormValues] = useState<FormValues>({
     entityName: '',
     donationAmount: '',
@@ -49,35 +63,28 @@ const DonationForm: React.FC = () => {
     conversionRate: ''
   });
 
-
+  
   const handleSubmitbtn = async (e: React.FormEvent) => {
-
-    try {
-
-      alert(formValues.entityName);
-      const validAmount = /^\d+(\.\d+)?$/;
-      if (validAmount.test(formValues.donationAmount) || formValues.donationAmount == '') {
-
-        const patams = await addItem(formValues,'donation');
-        alert(patams);
+    e.preventDefault(); 
+    console.log("Form values before dispatch:", formValues); 
+  
+    const validAmount = /^\d+(\.\d+)?$/;
+    if (validAmount.test(formValues.donationAmount) || formValues.donationAmount === '') {
+      try {
+        dispatch(addDonation(formValues)); 
+      } catch (error) {
+        console.error("Dispatch error:", error);
       }
-      else {
-        alert("inside else")
-      }
-
-
+    } else {
+      alert("Validation error with donation amount");
     }
-    catch {
-      alert("שדה חובה")
-    }
-
-
-
+  
+    console.log("Updated donation details:", donationDetails); 
   };
+  
 
   const handleCleanBtn = async (e: React.FormEvent) => {
     alert("click");
-
 
     setFormValues(() => ({
       entityName: '',
@@ -138,13 +145,12 @@ const DonationForm: React.FC = () => {
     }
   }
 
-
   return (
     <div className={donationForm.continer}>
       <form >
         <h2>הוספת דיווח על עמותה </h2>
         <div className={donationForm.firstInputs}>
-          <InputField isRequired={true} label="שם הישות המדינית הזרה" type="text" value={formValues.entityName} className={inputFiled.smallInput} onChange={(e) => handleChangeEntytyName(e.target.value)} />
+          <InputField   isRequired={true} label="שם הישות המדינית הזרה" type="text" value={formValues.entityName} className={inputFiled.smallInput} onChange={(e) => handleChangeEntytyName(e.target.value)} />
           <InputField isRequired={true} label="סכום התרומה בש" type="text" value={formValues.donationAmount} className={inputFiled.smallInput} onChange={(e) => handledonationAmount(e.target.value)} />
           <InputField isRequired={true} label="שם הישות המדינית הזרה" type="select"
             options={Object.values(EntityType).map((type) => ({ value: type, label: type }))}

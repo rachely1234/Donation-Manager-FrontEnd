@@ -17,6 +17,7 @@ input ,select{
    
   }
 
+
   
   input:focus {
     border: 3px solid #1d0ba9; 
@@ -38,16 +39,4 @@ input ,select{
     background-color: white;
     padding-left: 10px;
     padding-right: 10px;
-}
-
-
-.largeInput {
-  background-color: #1d0ba9;
-  flex-grow: 2;
-}
-
-.smallInput {
-  flex-grow: 1;
-  background-color: #e32;
-  color: blueviolet;
 }

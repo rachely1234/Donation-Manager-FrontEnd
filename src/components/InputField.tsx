@@ -19,9 +19,9 @@ const InputField: React.FC<InputFieldProps> = ({ label, type, value, isRequired,
 
     
     return (
-        <div className={`${inputFiled.inputContainer} ${inputFiled.className}`} >
+        <div className={`${inputFiled.inputContainer} `} >
 
-            {isRequired ? <label className={`${inputFiled.asterisk_input} ${inputFiled.lable_location}`}>
+            {isRequired ? <label className={`${inputFiled.asterisk_input} `}>
                 {label}</label> :
                 <label className={inputFiled.lable_location}>{label}</label>}
 
@@ -33,7 +33,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, type, value, isRequired,
                 ))}
             </select>
              :
-                <input className={`${className}`} required={isRequired} type={type} value={value} onChange={onChange} />}
+                <input className={`${className}`} required={isRequired} type={type} value={value} onChange={onChange}  />}
 
 
         </div>
