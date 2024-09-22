@@ -1,5 +1,5 @@
-import React, { useState,useEffect } from 'react';
-import { useDispatch ,useSelector} from 'react-redux';
+import React, { useState, useEffect,useCallback  } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { log } from 'console';
 import { EnumType } from 'typescript';
@@ -9,51 +9,43 @@ import donationForm from '../css/donationForm.module.css'
 import inputFiled from '../css/inputFiled.module.css';
 import { addItem } from '../apiRequest/genericRequest';
 
-import { addDonation} from '../redux/reducers/donationsReducer';
-// import { addDonation} from '../redux/reducers/donationsReducer';
+import { addDonation, editDonation } from '../redux/reducers/donationsReducer';
+import { FormValues, EntityType, CurrencyType } from "../interfaces/inputFiledProps"
+import { changeEdit, isViewForm } from '../redux/reducers/donationsReducer';
 
 
-
-
-interface FormValues {
-  entityName: string;
-  donationAmount: string;
-  entityType: EntityType;
-  donationTarget: string;
-  conditionForDonation: string;
-  currencyType: CurrencyType;
-  conversionRate: string;
+interface DonationFormProps {
+  onSubmit: (data: any) => void;
+  initialData?: any;
 }
 
-enum CurrencyType {
-
-  Null = '',
-  USD = 'USD',
-  EUR = 'EUR',
-  GBP = 'GBP',
-  ILS = 'ILS'
-}
-
-enum EntityType {
-  PrivateCompany = 'Private Company',
-  Government = 'Government',
-
-}
-
-const DonationForm: React.FC = () => {
+const DonationForm: React.FC<DonationFormProps> = ({ onSubmit, initialData }) => {
 
   const dispatch = useDispatch();
-  const donationDetails = useSelector((state: any) => state);
- 
+  const donationDetails = useSelector((state: any) => state.donation.donations);
+  const changeEditMode = useSelector((state: any) => state.donation.isEditMode);
+
+  const currentDonation = changeEditMode ? donationDetails[0] : null;
+
+
 
   useEffect(() => {
-    console.log("donationDetails updated:", donationDetails);  
-  }, [donationDetails]);
+    if (changeEditMode && currentDonation) {
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        entityName: currentDonation.entityName,
+        entityType: currentDonation,
+        donationTarget: currentDonation.donationTarget,
+        currencyType: currentDonation.currencyType,
+        conversionRate: currentDonation.conversionRate,
+      }));
+    }
+  }, [changeEditMode, currentDonation]);
 
-  //  const donationDetails = useSelector((state: any) => state.donations);
 
 
   const [formValues, setFormValues] = useState<FormValues>({
+    donationId: 0,
     entityName: '',
     donationAmount: '',
     entityType: EntityType.Government,
@@ -63,30 +55,43 @@ const DonationForm: React.FC = () => {
     conversionRate: ''
   });
 
-  
+
   const handleSubmitbtn = async (e: React.FormEvent) => {
-    e.preventDefault(); 
-    console.log("Form values before dispatch:", formValues); 
-  
+    e.preventDefault();
+    setFormValues((prevValues) => ({
+      ...prevValues,
+
+    }));
+
     const validAmount = /^\d+(\.\d+)?$/;
     if (validAmount.test(formValues.donationAmount) || formValues.donationAmount === '') {
       try {
-        dispatch(addDonation(formValues)); 
+
+        if (changeEditMode) {
+          dispatch(editDonation(formValues))
+          dispatch(changeEdit(changeEditMode));
+        }
+        else {
+          dispatch(addDonation(formValues));
+        }
+        onSubmit(formValues);
+
+
       } catch (error) {
         console.error("Dispatch error:", error);
       }
     } else {
       alert("Validation error with donation amount");
     }
-  
-    console.log("Updated donation details:", donationDetails); 
+
   };
-  
+
 
   const handleCleanBtn = async (e: React.FormEvent) => {
-    alert("click");
+   
 
     setFormValues(() => ({
+      donationId: 0,
       entityName: '',
       donationAmount: '',
       entityType: EntityType.Government,
@@ -98,13 +103,16 @@ const DonationForm: React.FC = () => {
     }));
 
   };
+  let x = 0;
 
-  const handleInputChange = (field: string, value: string | number) => {
+
+  const handleInputChange = useCallback((field: string, value: string | number) => {
     setFormValues((prevValues) => ({
       ...prevValues,
       [field]: value,
     }));
-  };
+  }, [setFormValues]); 
+  
 
   const handledonationAmount = (value: string) => {
 
@@ -117,6 +125,7 @@ const DonationForm: React.FC = () => {
       setFormValues((prevValues) => ({
         ...prevValues,
         ["donationAmount"]: value,
+        ["donationId"]: x++,
       }));
 
     } else {
@@ -150,7 +159,7 @@ const DonationForm: React.FC = () => {
       <form >
         <h2>הוספת דיווח על עמותה </h2>
         <div className={donationForm.firstInputs}>
-          <InputField   isRequired={true} label="שם הישות המדינית הזרה" type="text" value={formValues.entityName} className={inputFiled.smallInput} onChange={(e) => handleChangeEntytyName(e.target.value)} />
+          <InputField isRequired={true} label="שם הישות המדינית הזרה" type="text" value={formValues.entityName} className={inputFiled.smallInput} onChange={(e) => handleChangeEntytyName(e.target.value)} />
           <InputField isRequired={true} label="סכום התרומה בש" type="text" value={formValues.donationAmount} className={inputFiled.smallInput} onChange={(e) => handledonationAmount(e.target.value)} />
           <InputField isRequired={true} label="שם הישות המדינית הזרה" type="select"
             options={Object.values(EntityType).map((type) => ({ value: type, label: type }))}

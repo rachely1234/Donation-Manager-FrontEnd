@@ -6,7 +6,7 @@
     align-items: center;
     direction: rtl;
 
-    height: 100vh;
+    /* height: 100vh; */
 }
 
 
@@ -18,7 +18,10 @@ form {
 
     border: 1px solid #ccc;
 
-    box-shadow: 10px 10px 5px 12px rgba(0, 0, 0, 0.2);
+    /* box-shadow: 10px 10px 5px 12px rgba(0, 0, 0, 0.2); */
+    /* margin-top: 15; */
+
+    
 
 }
 

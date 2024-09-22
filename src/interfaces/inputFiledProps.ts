@@ -16,6 +16,7 @@ export enum EntityType {
 
 
 export interface FormValues {
+    donationId:Number;
     entityName: string;
     donationAmount: string;
     entityType: EntityType;

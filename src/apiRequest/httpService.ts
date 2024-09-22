@@ -6,7 +6,7 @@ const httpService = {
    
     post: async (object: any, route: string) => {
 
-        console.log("in post function ");
+      
 
         const response = await interpactor.post(route, object);
 
