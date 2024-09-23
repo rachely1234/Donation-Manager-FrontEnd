@@ -1,14 +1,21 @@
+.editModeBackground{
+    background-color: lightcyan;
+   
+}
+ 
+ 
  .DonationListContainer {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     direction: rtl;
     width: 700px;
-    /* border: solid 1px black; */
-    /* border-radius: 10px; */
     border-radius: inherit;
     padding-top: 5px;
     padding-bottom: 15px;
-   
+    border:solid 1px black;
+    padding-top: 5px;
+    border:solid 1px black;
 
 
 }
@@ -19,7 +26,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    
+
 
 
 }
@@ -65,12 +72,15 @@
 
 }
 
-.editModeBackground{
-    background-color: lightcyan;
-    border-bottom: lightcyan;
-}
+
 
 .defaultBackground{
     background-color: white;
 
+}
+
+input:-webkit-autofill {
+    background-color: light-dark(rgb(232, 240, 254), rgba(70, 90, 126, 0.4)) !important;
+    color: fieldtext !important;
+    appearance: menulist-button;
 }

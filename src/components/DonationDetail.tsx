@@ -30,7 +30,7 @@ const DonationDetail: React.FC<Props> = ({ details }) => {
 
 
     return (
-        <div className={donationLIst.DonationDetails}>
+        <div className={donationLIst.DonationListContainer}>
             <div className={donationLIst.DonationDetails}>
                 <p>{details.entityName}</p>
                 <p> {details.donationAmount}</p>
