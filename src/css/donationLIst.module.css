@@ -1,12 +1,14 @@
-.DonationListContainer {
+ .DonationListContainer {
     display: flex;
     justify-content: space-between;
     direction: rtl;
     width: 700px;
-    border: solid 1px black;
-    border-radius: 10px;
+    /* border: solid 1px black; */
+    /* border-radius: 10px; */
+    border-radius: inherit;
     padding-top: 5px;
     padding-bottom: 15px;
+   
 
 
 }
@@ -17,6 +19,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    
 
 
 }
@@ -25,16 +28,21 @@
     margin: 4px;
     padding: 0;
 }
+.DonationDetails p:first-child {
+   color: black;
+
+}
 
 .DonationDetails p:first-child {
     font-weight: 500;
-}
+} 
 
 .ActionButtons {
 
     display: flex;
     align-items: center;
     justify-content: space-between;
+   
 }
 
 .container {
@@ -47,3 +55,22 @@
 
 }
 
+.buttonWrapper{
+
+    display: flex;
+    justify-content: flex-start;
+
+    gap: 20px;
+    margin-left: 0; 
+
+}
+
+.editModeBackground{
+    background-color: lightcyan;
+    border-bottom: lightcyan;
+}
+
+.defaultBackground{
+    background-color: white;
+
+}

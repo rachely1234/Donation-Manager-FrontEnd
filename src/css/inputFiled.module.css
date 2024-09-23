@@ -1,42 +1,98 @@
-.inputContainer {
-    position: relative;
-    margin: 20px 0;
+
+input:focus {
+  border: 3px solid #1d0ba9;
+  border-radius: 10px;
 }
-input ,select{
-    
-    padding: 12px 20px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    border: 3px solid #030303;
-    -webkit-transition: 0.5s;
-    transition: 0.5s;
-    outline: none;
-    border-radius:10px;
-    color: rgb(0, 0, 0);
-    width: 100%;
-   
-  }
 
-
+.asteriskInput::after {
+  content: " *";
+  color: #e32;
+  position: absolute;
+  font-size: medium;
+  background-color: #ffffff;
   
-  input:focus {
-    border: 3px solid #1d0ba9; 
-    border-radius: 10px;
-  }
 
-  .asterisk_input::after {
-    content:" *"; 
-    color: #e32;
-    position: absolute; 
-    font-size: large; 
-    padding: 0 5px 0 0; 
-    
 }
 
-.lable_location{
-    position: absolute;
-    
-    background-color: white;
-    padding-left: 10px;
-    padding-right: 10px;
+.lable_location {
+  position: absolute;
+
+  background-color: rgb(255, 255, 255);
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.wrapperInput {
+  height: 35px;
+  display: flex;
+  position: relative;
+}
+
+.wrapperInput.select {
+  height: 40.5px;
+}
+
+.wrapperInput input,
+.wrapperInput select {
+  border: grey solid 1.5px;
+  z-index: 1;
+  border-radius: 11px;
+  height: 100%;
+  background-color: transparent;
+  width: 100%;
+  padding: 2px 10px
+}
+
+.wrapperInputInput:focus {
+  border: #1976d2 solid 1.5px;
+
+}
+
+
+.activeLabel {
+  position: absolute;
+  right: 17px;
+  top: -2px;
+  background-color: rgb(254, 254, 254);
+  padding: 0 2px;
+  color: #1976d2;
+  z-index: 1;
+  font-size: 0.85em;
+}
+
+
+label {
+  position: absolute;
+  right: 30px;
+  text-align: center;
+  top: 30%;
+  background-color: white;
+  /* color: #e32; */
+  font-size: small;
+}
+
+.item {
+  margin: 10px 0;
+  padding: 10px;
+
+}
+
+.largeInput {
+
+  width: 300px;
+
+}
+
+.mediumInput {
+  width: 175px;
+}
+
+.smallInput {
+  width: 185px;
+  
+}
+
+.inputField:focus {
+  outline: none;
+  border: solid 2px blue;
 }

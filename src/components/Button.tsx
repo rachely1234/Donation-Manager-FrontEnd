@@ -12,16 +12,16 @@ interface ButtonProps {
 
 }
 
-const Button: React.FC<ButtonProps> = ({ typeButton, value,hasBackground,onClick }) => {
+const Button: React.FC<ButtonProps> = ({ typeButton, value, hasBackground = true, onClick }) => {
   const buttonClass = `${button.button_template} ${hasBackground ? button.hasBackground : button.withoutBackground}`;
 
   return (
-<>
-<button onClick={onClick} className={buttonClass} type={typeButton}>
-      {value}
-    </button>
-</>
-
+    
+      <button onClick={onClick} className={buttonClass} type={typeButton}>
+        {value}
+      </button>
+    
+    
   );
 };
 

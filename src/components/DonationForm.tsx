@@ -1,8 +1,5 @@
-import React, { useState, useEffect,useCallback  } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
-import { log } from 'console';
-import { EnumType } from 'typescript';
 import InputField from './InputField';
 import Button from './Button';
 import donationForm from '../css/donationForm.module.css'
@@ -10,13 +7,14 @@ import inputFiled from '../css/inputFiled.module.css';
 import { addItem } from '../apiRequest/genericRequest';
 
 import { addDonation, editDonation } from '../redux/reducers/donationsReducer';
-import { FormValues, EntityType, CurrencyType } from "../interfaces/inputFiledProps"
-import { changeEdit, isViewForm } from '../redux/reducers/donationsReducer';
+import { DonationFormValue, EntityType, CurrencyType } from "../interfaces/inputFiledProps"
+import { isViewForm } from '../redux/reducers/donationsReducer';
 
 
 interface DonationFormProps {
   onSubmit: (data: any) => void;
   initialData?: any;
+
 }
 
 const DonationForm: React.FC<DonationFormProps> = ({ onSubmit, initialData }) => {
@@ -24,31 +22,52 @@ const DonationForm: React.FC<DonationFormProps> = ({ onSubmit, initialData }) =>
   const dispatch = useDispatch();
   const donationDetails = useSelector((state: any) => state.donation.donations);
   const changeEditMode = useSelector((state: any) => state.donation.isEditMode);
+  const isFormVisible = useSelector((state: any) => state.donation.isFormVisible);
+  const donationIDToEdit = useSelector((state: any) => state.donation.donationIDToEdit);
+  const currentDonationId = useSelector((state: any) => state.donation.ID);
 
-  const currentDonation = changeEditMode ? donationDetails[0] : null;
+  let editingDonation = donationDetails.find((d: any) => d.donationId == donationIDToEdit)
+
+
+
+
+  const checkFormValidity = () => {
+    if (
+      !DonationFormValue.entityName ||
+      !DonationFormValue.donationAmount ||
+      DonationFormValue.entityType === EntityType.Null ||
+      !DonationFormValue.donationTarget ||
+      DonationFormValue.currencyType === CurrencyType.Null ||
+      !DonationFormValue.conversionRate
+    ) {
+      return false; 
+    }
+    return true; 
+  };
 
 
 
   useEffect(() => {
-    if (changeEditMode && currentDonation) {
-      setFormValues((prevValues) => ({
+    if (changeEditMode && editingDonation) {
+      updateDonationFormValues((prevValues) => ({
         ...prevValues,
-        entityName: currentDonation.entityName,
-        entityType: currentDonation,
-        donationTarget: currentDonation.donationTarget,
-        currencyType: currentDonation.currencyType,
-        conversionRate: currentDonation.conversionRate,
+        entityName: editingDonation.entityName,
+        entityType: editingDonation.entityType,
+        donationTarget: editingDonation.donationTarget,
+        currencyType: editingDonation.currencyType,
+        conversionRate: editingDonation.conversionRate,
+        donationId: editingDonation.donationId
       }));
     }
-  }, [changeEditMode, currentDonation]);
+  }, [changeEditMode, editingDonation]);
 
 
 
-  const [formValues, setFormValues] = useState<FormValues>({
+  const [DonationFormValue, updateDonationFormValues] = useState<DonationFormValue>({
     donationId: 0,
     entityName: '',
     donationAmount: '',
-    entityType: EntityType.Government,
+    entityType: EntityType.Null,
     donationTarget: '',
     conditionForDonation: '',
     currencyType: CurrencyType.Null,
@@ -58,23 +77,34 @@ const DonationForm: React.FC<DonationFormProps> = ({ onSubmit, initialData }) =>
 
   const handleSubmitbtn = async (e: React.FormEvent) => {
     e.preventDefault();
-    setFormValues((prevValues) => ({
+    if (!checkFormValidity()) {
+      alert("Please fill out all required fields.");
+      return;
+    }
+    updateDonationFormValues((prevValues) => ({
       ...prevValues,
 
     }));
 
     const validAmount = /^\d+(\.\d+)?$/;
-    if (validAmount.test(formValues.donationAmount) || formValues.donationAmount === '') {
+    if (validAmount.test(DonationFormValue.donationAmount) || DonationFormValue.donationAmount === '') {
       try {
 
         if (changeEditMode) {
-          dispatch(editDonation(formValues))
-          dispatch(changeEdit(changeEditMode));
+
+          dispatch(editDonation(DonationFormValue))
+          dispatch(isViewForm(isFormVisible))
         }
+
+
         else {
-          dispatch(addDonation(formValues));
+          dispatch(addDonation(DonationFormValue));
+
+
         }
-        onSubmit(formValues);
+        await addItem(DonationFormValue, 'donation');
+
+        onSubmit(DonationFormValue);
 
 
       } catch (error) {
@@ -87,14 +117,14 @@ const DonationForm: React.FC<DonationFormProps> = ({ onSubmit, initialData }) =>
   };
 
 
-  const handleCleanBtn = async (e: React.FormEvent) => {
-   
+  const resetForm = async (e: React.FormEvent) => {
 
-    setFormValues(() => ({
+
+    updateDonationFormValues(() => ({
       donationId: 0,
       entityName: '',
       donationAmount: '',
-      entityType: EntityType.Government,
+      entityType: EntityType.Null,
       donationTarget: '',
       conditionForDonation: '',
       currencyType: CurrencyType.Null,
@@ -103,84 +133,82 @@ const DonationForm: React.FC<DonationFormProps> = ({ onSubmit, initialData }) =>
     }));
 
   };
-  let x = 0;
+
 
 
   const handleInputChange = useCallback((field: string, value: string | number) => {
-    setFormValues((prevValues) => ({
+    updateDonationFormValues((prevValues) => ({
       ...prevValues,
       [field]: value,
     }));
-  }, [setFormValues]); 
-  
+  }, [updateDonationFormValues]);
 
-  const handledonationAmount = (value: string) => {
+
+  const handleDonationAmountChange = (value: string) => {
 
     const validAmount = /^\d+(\.\d+)?$/;
 
-
-    //בעת שליחת הטופס לא לשכוח לעששטת ולידציה כמו פה לודא שכתבו מספר אחרי הנקודה
     if (validAmount.test(value) || value == '' || value[value.length - 1] == '.') {
 
-      setFormValues((prevValues) => ({
+      updateDonationFormValues((prevValues) => ({
         ...prevValues,
         ["donationAmount"]: value,
-        ["donationId"]: x++,
+        ["donationId"]: currentDonationId,
       }));
 
     } else {
 
-      //אם יהיה זמן לממש פה תצוגת שגיאה נורמלית
-      alert("validation error")
+
     }
   }
 
 
-  const handleChangeEntytyName = (value: string) => {
+  const handleEntityNameChange = (value: string) => {
 
     const regex = /^[A-Za-zא-ת\s]*$/;
 
     if (regex.test(value)) {
 
-      setFormValues((prevValues) => ({
+      updateDonationFormValues((prevValues) => ({
         ...prevValues,
         ["entityName"]: value,
       }));
 
     } else {
 
-      //אם יהיה זמן לממש פה תצוגת שגיאה נורמלית
+
       alert("validation error")
     }
   }
 
   return (
-    <div className={donationForm.continer}>
-      <form >
-        <h2>הוספת דיווח על עמותה </h2>
-        <div className={donationForm.firstInputs}>
-          <InputField isRequired={true} label="שם הישות המדינית הזרה" type="text" value={formValues.entityName} className={inputFiled.smallInput} onChange={(e) => handleChangeEntytyName(e.target.value)} />
-          <InputField isRequired={true} label="סכום התרומה בש" type="text" value={formValues.donationAmount} className={inputFiled.smallInput} onChange={(e) => handledonationAmount(e.target.value)} />
-          <InputField isRequired={true} label="שם הישות המדינית הזרה" type="select"
-            options={Object.values(EntityType).map((type) => ({ value: type, label: type }))}
-
-            value={formValues.entityType} className={inputFiled.largeInput} onChange={(e) => handleInputChange('currencyType', e.target.value)} />
-
+    <form className={changeEditMode ? donationForm.editModeForm : donationForm.defaultForm}>
+      {!changeEditMode ? (
+        <div>
+          <h2>הוספת דיווח על עמותה</h2>
         </div>
-        <InputField isRequired={true} label="ייעוד התרומה" type="text" value={formValues.donationTarget} className={donationForm.largeInput} onChange={(e) => handleInputChange('donationTarget', e.target.value)} />
-        <InputField isRequired={false} label="התנאים לתרומה" type="text" value={formValues.conditionForDonation} className={donationForm.largeInput} onChange={(e) => handleInputChange('conditionForDonation', e.target.value)} />
-        <div className={donationForm.lastInputs}>
-          <InputField isRequired={true} label="סוג מטבע" type="select"
-            options={Object.values(CurrencyType).map((type) => ({ value: type, label: type }))}
+      ) : null}
+      <div className={changeEditMode ? donationForm.headerOnputsEditMode : donationForm.headerOnputs} >
+        <InputField entityName='entityName' isRequired={true} label="שם הישות המדינית הזרה" type="text" value={DonationFormValue.entityName} className={changeEditMode ? donationForm.largeInput : inputFiled.smallInput} onChange={(e) => handleEntityNameChange(e.target.value)} />
+        <InputField entityName='donamtionAmount' isRequired={true} label="סכום התרומה בש" type="text" value={DonationFormValue.donationAmount} className={changeEditMode ? donationForm.largeInput : inputFiled.smallInput} onChange={(e) => handleDonationAmountChange(e.target.value)} />
+        <InputField className={changeEditMode ? donationForm.largeInput : inputFiled.largeInput} entityName='entityType' isRequired={true} label="סוג הישות המדינית הזרה" type="select"
+          options={Object.values(EntityType).map((type) => ({ value: type, label: type }))}
+          value={DonationFormValue.entityType} onChange={(e) => handleInputChange('entityType', e.target.value)} />
+      </div>
+      <InputField entityName='donationTarget' isRequired={true} label="ייעוד התרומה" type="text" value={DonationFormValue.donationTarget} className={donationForm.largeInput} onChange={(e) => handleInputChange('donationTarget', e.target.value)} />
+      <InputField entityName='conditionForDonation' isRequired={false} label="התנאים לתרומה" type="text" value={DonationFormValue.conditionForDonation} className={donationForm.largeInput} onChange={(e) => handleInputChange('conditionForDonation', e.target.value)} />
+      <div className={changeEditMode ? donationForm.headerOnputsEditMode : donationForm.lastInputs}>
+        <InputField entityName='cornType' isRequired={true} label="סוג מטבע" type="select"
+          options={Object.values(CurrencyType).map((type) => ({ value: type, label: type }))}
 
-            value={formValues.currencyType} className={inputFiled.largeInput} onChange={(e) => handleInputChange('currencyType', e.target.value)} />
-          <InputField isRequired={true} label="שער המרה" type="text" value={formValues.conversionRate} className={donationForm.largeInput} onChange={(e) => handleInputChange('conversionRate', e.target.value)} />
-        </div>
-        <Button onClick={handleSubmitbtn} typeButton='submit' value='שמירה' hasBackground={false} />
-        <Button onClick={handleCleanBtn} typeButton='button' value='ניקוי' hasBackground={true} />
-
-      </form>
-    </div>
+          value={DonationFormValue.currencyType} className={changeEditMode ? donationForm.largeInput : inputFiled.mediumInput} onChange={(e) => handleInputChange('currencyType', e.target.value)} />
+        <InputField entityName='conversionRate' isRequired={true} label="שער המרה" type="text" value={DonationFormValue.conversionRate} className={donationForm.largeInput} onChange={(e) => handleInputChange('conversionRate', e.target.value)} />
+      </div>
+      <div className={donationForm.buttonWrapper}>
+        <Button onClick={resetForm} typeButton='button' value='ניקוי' hasBackground={false} />
+        <Button onClick={handleSubmitbtn} typeButton='submit' value='שמירה' hasBackground={true} />
+      </div>
+    </form>
   );
 };
 

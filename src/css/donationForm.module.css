@@ -1,41 +1,62 @@
-.continer {
-
-    display: flex;
-    justify-content: center;
-
-    align-items: center;
-    direction: rtl;
-
-    /* height: 100vh; */
-}
-
-
 form {
 
+    border: #dfdfdf solid 1px;
+    border-radius: 11px;
+    box-shadow: none;
+    margin: 0 auto;
+    box-shadow: 0 0 4px 1px lightgrey;
+    direction: rtl;
+    color: lightslategray;
+    font-family: Segoe UI Semibold;
     width: 700px;
+    display: flex;
+    flex-direction: column;
 
-    padding: 20px;
-
-    border: 1px solid #ccc;
-
-    /* box-shadow: 10px 10px 5px 12px rgba(0, 0, 0, 0.2); */
-    /* margin-top: 15; */
-
-    
 
 }
 
-.firstInputs {
+.editModeForm {
 
-   
+    border: #dfdfdf solid 1px;
+    border-radius: initial;
+
+    box-shadow: none;
+
+    margin: 0 auto;
+    direction: rtl;
+    color: lightslategray;
+    font-family: Segoe UI Semibold;
+    width: 700px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+h2 {
+    color: black;
+}
+
+.headerOnputs {
     display: flex;
     justify-content: space-between;
+}
+
+.headerOnputsEditMode {
+    display: flex;
+    flex-direction: column;
+
 }
 
 .lastInputs {
     display: flex;
     justify-content: flex-start;
-    
-
+    gap: -10px;
 }
 
+.buttonWrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-bottom: 10px;
+    padding-left: 5px;
+}

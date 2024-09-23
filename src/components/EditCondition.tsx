@@ -1,41 +1,36 @@
-
-
-import React, { useState } from 'react';
+import React from 'react';
 import DonationForm from './DonationForm';
 import DonationDetailList from './DonationDetailList';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeEdit, isViewForm } from '../redux/reducers/donationsReducer';
-import editCondition from '../css/editCondition.module.css'
+import editCondition from '../css/editCondition.module.css';
 
 const DonationPage: React.FC = () => {
-
   const dispatch = useDispatch();
 
-  const changeEditMode = useSelector((state: any) => state.donation.isEditMode);
-  const isFormVisible = useSelector((state: any) => state.donation.isFormVisible);
+ 
+  const donationState = useSelector((state: any) => ({
+    isEditMode: state.donation.isEditMode,
+    isFormVisible: state.donation.isFormVisible,
+  }));
 
   const handleDonationFormSubmit = (data: any) => {
-
-    dispatch(isViewForm(isFormVisible));
-    dispatch(changeEdit(changeEditMode));
-
+    dispatch(isViewForm(donationState.isFormVisible));
+    dispatch(changeEdit(donationState.isEditMode));
   };
 
   return (
     <div>
-      {isFormVisible && !changeEditMode && (
+      {donationState.isFormVisible && !donationState.isEditMode && (
         <DonationForm onSubmit={handleDonationFormSubmit} />
       )}
 
-      {changeEditMode && !isFormVisible && (
-        <div>
-          <DonationDetailList />
-
-        </div>
+      {donationState.isEditMode && !donationState.isFormVisible && (
+        <DonationDetailList />
       )}
 
-      {changeEditMode && isFormVisible && (
-        <div className={editCondition.container }>
+      {donationState.isEditMode && donationState.isFormVisible && (
+        <div className={editCondition.container}>
           <DonationDetailList />
           <DonationForm onSubmit={handleDonationFormSubmit} />
         </div>
@@ -45,4 +40,3 @@ const DonationPage: React.FC = () => {
 };
 
 export default DonationPage;
-

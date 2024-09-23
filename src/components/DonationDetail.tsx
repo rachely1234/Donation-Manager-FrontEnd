@@ -1,43 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { log } from 'console';
-import { EnumType } from 'typescript';
-import Button from './Button';
-import donationForm from '../css/donationForm.module.css'
-import { addDonation } from '../redux/reducers/donationsReducer';
 import IconButton from "@mui/material/IconButton";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
 import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
-import donationLIst from '../css/donationLIst.module.css'
-import {FormValues,EntityType,CurrencyType} from "../interfaces/inputFiledProps";
-import {changeEdit,isViewForm} from '../redux/reducers/donationsReducer';
-import InputField from './InputField';
+import donationLIst from '../css/donationLIst.module.css';
+import { DonationFormValue, EntityType, CurrencyType } from "../interfaces/inputFiledProps";
+import { isViewForm, donationIDToEditFunc } from '../redux/reducers/donationsReducer';
 
 interface Props {
-    details:FormValues,
+    details: DonationFormValue,
 
 }
 
 
-const DonationDetail: React.FC <Props>= ({details}) => {
+const DonationDetail: React.FC<Props> = ({ details }) => {
 
     const dispatch = useDispatch();
-    const changeEditMode = useSelector((state: any) => state.donation.isEditMode);
-    const isFormVisible  = useSelector((state: any) => state.donation.isFormVisible);
-
+    const isFormVisible = useSelector((state: any) => state.donation.isFormVisible);
 
 
     const handleEditClick = () => {
 
         dispatch(isViewForm(isFormVisible))
-        
+        dispatch(donationIDToEditFunc(details.donationId));
+
     }
 
 
     return (
-        <div className={donationLIst.DonationListContainer}>
+        <div className={donationLIst.DonationDetails}>
             <div className={donationLIst.DonationDetails}>
                 <p>{details.entityName}</p>
                 <p> {details.donationAmount}</p>
@@ -50,14 +43,10 @@ const DonationDetail: React.FC <Props>= ({details}) => {
                     height: '20px',
                     margin: '0 10px'
                 }} />
-   
-                <KeyboardArrowDownOutlinedIcon color ='primary'/>
+                {isFormVisible ? <KeyboardArrowUpOutlinedIcon color='primary' /> :
+                    <KeyboardArrowDownOutlinedIcon color='primary' />
+                }
             </div>
-
-
-
-
-
 
         </div>
 
