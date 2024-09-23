@@ -71,7 +71,6 @@ label {
   text-align: center;
   top: 30%;
   background-color: white;
-  /* color: #e32; */
   font-size: small;
 }
 
@@ -105,7 +104,7 @@ label {
 input:-webkit-autofill {
   background-color: transparent !important; 
   color: fieldtext !important; 
-  border: 1px solid #ccc; /* גבול אם תרצה */
+  border: 1px solid #ccc; 
   box-shadow: 0 0 0px 1000px transparent inset !important; 
   transition: background-color 5000s ease-in-out 0s; 
 }
